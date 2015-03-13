@@ -17,7 +17,7 @@ uint8_t combine(int a, int b)
 }
 
 // read dht11 object
-bool int dht11_read_obj(DHTobj* DHTdata)
+bool dht11_read_obj(DHTobj* DHTdata)
 {
     int dht11_val[5] = {0,0,0,0,0};
 

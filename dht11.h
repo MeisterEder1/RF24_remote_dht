@@ -12,7 +12,7 @@ struct DHTobj
     bool ack;
 };
 
-unsigned int dht11_read(int* dht11_val);
-unsigned int dht11_read_obj(DHTobj* DHTdata);
+bool dht11_read(int* dht11_val);
+bool dht11_read_obj(DHTobj* DHTdata);
 
 #endif

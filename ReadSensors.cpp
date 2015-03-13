@@ -8,7 +8,7 @@
 #include "ReadSensors.h"
 
 #define MYSQL_USER "root"
-#define MYSQL_PASSWD "yourPassword"
+#define MYSQL_PASSWD "YourPassword"
 #define MYSQL_DB "Monitoring"
 #define MYSQL_SERVER "localhost"
 
