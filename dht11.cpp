@@ -5,7 +5,8 @@
 #include <stdbool.h>
 #include "dht11.h"
 
-int combine(int a, int b)
+// combine two binary values to one uint8_t
+uint8_t combine(int a, int b)
 {
     int times = 1;
 
@@ -15,7 +16,7 @@ int combine(int a, int b)
     return a * times + b;
 }
 
-unsigned int dht11_read_obj(DHTobj* DHTdata)
+bool int dht11_read_obj(DHTobj* DHTdata)
 {
     int dht11_val[5] = {0,0,0,0,0};
 
@@ -28,7 +29,7 @@ unsigned int dht11_read_obj(DHTobj* DHTdata)
     return 1;
 }
 
-unsigned int dht11_read(int* dht11_val)
+bool dht11_read(int* dht11_val)
 {
     uint8_t lstState = HIGH;
     uint8_t counter = 0;
