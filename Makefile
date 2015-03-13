@@ -16,7 +16,7 @@ CCFLAGS=-Ofast -march=armv7-a -mtune=cortex-a7 -mfpu=neon -mfloat-abi=hard
 
 # define all programs
 CC=g++
-LDLIBS  = -lrf24-bcm -lwiringPi -lmysqlclient
+LDLIBS  = -lrf24-bcm -lmysqlclient -lwiringPi
 DEPS = dht11.h
 OBJ = ReadSensors.o dht11.o
 PROGRAM = ReadSensors

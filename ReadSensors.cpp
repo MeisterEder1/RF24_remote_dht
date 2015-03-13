@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <time.h>
-#include <wiringPi.h>
+//#include <wiringPi.h>
 #include <RF24/RF24.h>
 #include <mysql/mysql.h>
 #include "dht11.h"
@@ -21,9 +21,8 @@ void finish_with_error(MYSQL *con)
 
 int main(int argc, char** argv)
 {
-    if ( wiringPiSetup() == -1 )
-        exit( 1 );
-
+//    if ( wiringPiSetup() == -1 )
+//        exit( 1 );
 //    piHiPri(55);
 
     char SQLstring[64]; // string to send to SQL engine
