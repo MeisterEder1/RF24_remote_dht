@@ -16,6 +16,7 @@ uint8_t combine(int a, int b)
     return a * times + b;
 }
 
+// read dht11 object
 bool int dht11_read_obj(DHTobj* DHTdata)
 {
     int dht11_val[5] = {0,0,0,0,0};
@@ -29,6 +30,7 @@ bool int dht11_read_obj(DHTobj* DHTdata)
     return 1;
 }
 
+// dht11 read function from http://www.rpiblog.com/2012/11/interfacing-temperature-and-humidity.html
 bool dht11_read(int* dht11_val)
 {
     uint8_t lstState = HIGH;
