@@ -27,9 +27,6 @@ void setup()
 #endif
 
   radio.begin();
-
- // Set the PA Level low to prevent power supply related issues since this is a
- // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_250KBPS);
 //  radio.setAutoAck(1);                     // Ensure autoACK is enabled
