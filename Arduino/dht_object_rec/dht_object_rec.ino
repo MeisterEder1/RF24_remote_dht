@@ -1,9 +1,4 @@
 
-/*
-* Getting Started example sketch for nRF24L01+ radios
-* This is an example of how to send data from one node to another using data structures
-* Updated: Dec 2014 by TMRh20
-*/
 #include <SPI.h>
 #include "RF24.h"
 #include <Wire.h>
@@ -16,7 +11,7 @@ Adafruit_SSD1306 display(OLED_RESET);
 
 byte addresses[][6] = {"1Node","2Node","3Node"};
 
-/* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 7 & 8 */
+// Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 9, 10
 RF24 radio(9,10);
 
 void displaySensor(byte sensor, float humid, float temp)
@@ -39,19 +34,15 @@ void setup()
   display.setTextColor(WHITE);
   display.clearDisplay();
   display.setCursor(0, 0);
-  display.println("scanning...");
+  display.println("Scanning...");
   display.display();  
 
 #ifdef _USE_SERIAL_
   Serial.begin(115200);
-  Serial.println(F("RF24/examples/GettingStarted"));
-  Serial.println(F("*** PRESS 'T' to begin transmitting to the other node"));
 #endif
 
   radio.begin();
 
-  // Set the PA Level low to prevent power supply related issues since this is a
- // getting_started sketch, and the likelihood of close proximity of the devices. RF24_PA_MAX is default.
   radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_250KBPS);
 //  radio.setAutoAck(1);                     // Ensure autoACK is enabled
@@ -67,12 +58,9 @@ void setup()
   radio.startListening();
 }
 
-/**
-* Create a data structure for transmitting and receiving data
-* This allows many variables to be easily sent and received in a single transmission
-* See http://www.cplusplus.com/doc/tutorial/structures/
-*/
-struct dataStruct{
+// Create data structure for transmitting and receiving data
+struct dataStruct
+{
   float temperature = 0.0;
   float humidity = 0.0;
   byte sensor = 0;
@@ -108,6 +96,7 @@ void loop()
       Serial.print(DHTdata.ack);
       #endif
       delay(500);
-   }
+   }   
+   delay(50);
 } // Loop
 
