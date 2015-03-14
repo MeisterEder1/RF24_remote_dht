@@ -5,8 +5,11 @@
 #include <stdbool.h>
 #include "dht11.h"
 
+float lastTemp = 0.0;
+float lastRH = 0.0;
+
 // combine two binary values to one uint8_t
-uint8_t combine(int a, int b)
+int combine(int a, int b)
 {
     int times = 1;
 
@@ -22,12 +25,24 @@ bool dht11_read_obj(DHTobj* DHTdata)
     int dht11_val[5] = {0,0,0,0,0};
 
     if(!dht11_read(dht11_val))
-        return 0;
+        return false;
 
-    DHTdata->temperature = combine(dht11_val[2], dht11_val[3]);
-    DHTdata->humidity = combine(dht11_val[0], dht11_val[1]);
+    float temp = combine(dht11_val[2], dht11_val[3]);
+    float rh = combine(dht11_val[0], dht11_val[1]);
+
+    if(!lastTemp)
+        lastTemp = temp;
+
+    if(!lastRH)
+        lastRH = rh;
+
+    temp = (temp + lastTemp) / 2;
+    rh = (rh + lastRH) / 2;
+
+    DHTdata->temperature = temp;
+    DHTdata->humidity = rh;
     DHTdata->sensor = 6;
-    return 1;
+    return true;
 }
 
 // dht11 read function from http://www.rpiblog.com/2012/11/interfacing-temperature-and-humidity.html
@@ -38,8 +53,7 @@ bool dht11_read(int* dht11_val)
     uint8_t j = 0, i;
 
     // clear values
-    for(i=0; i<5; ++i)
-        dht11_val[i] = 0;
+    dht11_val[0] = dht11_val[1] = dht11_val[2] = dht11_val[3] = dht11_val[4] = 0;
 
     pinMode(DHT11PIN, OUTPUT);
     digitalWrite(DHT11PIN, LOW);
@@ -76,9 +90,9 @@ bool dht11_read(int* dht11_val)
         }
     }
 
-    // verify cheksum and print the verified data
+    // verify checksum and print verified data
     if((j >= 40) && (dht11_val[4] == ((dht11_val[0] + dht11_val[1] + dht11_val[2] + dht11_val[3]) & 0xFF)))
-        return 1;
+        return true;
     else
-        return 0;
+        return false;
 }

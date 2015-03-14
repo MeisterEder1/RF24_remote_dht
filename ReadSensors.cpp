@@ -1,16 +1,16 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <time.h>
-//#include <wiringPi.h>
+#include <wiringPi.h>
 #include <RF24/RF24.h>
 #include <mysql/mysql.h>
 #include "dht11.h"
 #include "ReadSensors.h"
 
-#define MYSQL_USER "root"
-#define MYSQL_PASSWD "YourPassword"
-#define MYSQL_DB "Monitoring"
-#define MYSQL_SERVER "localhost"
+const char* MYSQLHOST = "localhost";
+const char* MYSQLUSER = "root";
+const char* MYSQLPASSWD = "password";
+const char* MYSQLDB = "Monitoring";
 
 void finish_with_error(MYSQL *con)
 {
@@ -21,8 +21,8 @@ void finish_with_error(MYSQL *con)
 
 int main(int argc, char** argv)
 {
-//    if ( wiringPiSetup() == -1 )
-//        exit( 1 );
+    if ( wiringPiSetup() == -1 )
+        exit( 1 );
 //    piHiPri(55);
 
     char SQLstring[64]; // string to send to SQL engine
@@ -32,7 +32,7 @@ int main(int argc, char** argv)
     if (con == NULL)
         finish_with_error(con);
 
-    if (mysql_real_connect(con, MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWD, MYSQL_DB, 0, NULL, 0) == NULL)
+    if (mysql_real_connect(con, MYSQLHOST, MYSQLUSER, MYSQLPASSWD, MYSQLDB, 0, NULL, 0) == NULL)
         finish_with_error(con);
 
     // declare DHTobj

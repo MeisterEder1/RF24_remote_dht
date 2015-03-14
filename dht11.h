@@ -11,7 +11,7 @@ struct DHTobj
     uint8_t sensor;
     bool ack;
 };
-
+bool read_dht11(int* dht11_dat);
 bool dht11_read(int* dht11_val);
 bool dht11_read_obj(DHTobj* DHTdata);
 
