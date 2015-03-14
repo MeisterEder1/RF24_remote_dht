@@ -88,6 +88,8 @@ int main(int argc, char** argv)
             while(!dht11_read_obj(&DHTlocal))
                 usleep(50000);
 
+            if(DHTdata.sensor == 2)
+            {
             // print values for logfile
             printf("Time: %s\n", asctime(timeinfo));
             printf("Local Sensor:\n");
@@ -99,7 +101,7 @@ int main(int argc, char** argv)
 
             if (mysql_query(con, SQLstring))
                 finish_with_error(con);
-
+            }
             radio.stopListening();                          // First, stop listening so we can talk
             DHTdata.ack = 1;                                // send ack
             radio.write( &DHTdata, sizeof(DHTdata) );       // Send the final one back.
