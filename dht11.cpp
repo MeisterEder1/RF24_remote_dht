@@ -5,8 +5,9 @@
 #include <stdbool.h>
 #include "dht11.h"
 
-float lastTemp = 0.0;
-float lastRH = 0.0;
+float lastTemp[] = {0.0, 0.0, 0.0};
+float lastRH[] = {0.0, 0.0, 0.0};
+uint8_t index = 0;
 
 // combine two binary values to one uint8_t
 int combine(int a, int b)
@@ -27,17 +28,40 @@ bool dht11_read_obj(DHTobj* DHTdata)
     if(!dht11_read(dht11_val))
         return false;
 
-    float temp = combine(dht11_val[2], dht11_val[3]);
-    float rh = combine(dht11_val[0], dht11_val[1]);
+    float temp = (float)combine(dht11_val[2], dht11_val[3]);
+    float rh = (float)combine(dht11_val[0], dht11_val[1]);
 
-    if(!lastTemp)
-        lastTemp = temp;
+    // initialize lastTemp / lastRH arrays
+    if(lastTemp[0] == 0.0)
+    {
+        lastTemp[0] = temp;
+        lastRH[0] = rh;
+    }
 
-    if(!lastRH)
-        lastRH = rh;
+    if(lastTemp[1] == 0.0)
+    {
+        lastTemp[1] = temp;
+        lastRH[1] = rh;
+    }
 
-    temp = (temp + lastTemp) / 2;
-    rh = (rh + lastRH) / 2;
+    if(lastTemp[2] == 0.0)
+    {
+        lastTemp[2] = temp;
+        lastRH[2] = rh;
+    }
+
+    temp = (temp + lastTemp[0] + lastTemp[1] + lastTemp[2]) * 0.25;
+    rh = (rh + lastRH[0] + lastRH[1] + lastRH[2]) * 0.25;
+
+    // set index for lastTemp / lastRH arrays
+    if(index < 3)
+      ++index;
+    else
+      index = 0;
+
+    // set values for lastTemp / lastRH arrays
+    lastTemp[index] = temp;
+    lastRH[index] = rh;
 
     DHTdata->temperature = temp;
     DHTdata->humidity = rh;
