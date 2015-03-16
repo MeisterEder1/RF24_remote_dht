@@ -5,14 +5,15 @@
 #include <stdbool.h>
 #include "dht11.h"
 
-float lastTemp[] = {0.0, 0.0, 0.0};
-float lastRH[] = {0.0, 0.0, 0.0};
+float lastTemp[] = {0.0, 0.0, 0.0, 0.0, 0.0};
+float lastRH[] = {0.0, 0.0, 0.0, 0.0, 0.0};
 uint8_t index = 0;
+const uint8_t MEAN_WINDOW = 5;
 
 // combine two binary values to one uint8_t
-int combine(int a, int b)
+uint8_t combine(uint8_t a, uint8_t b)
 {
-    int times = 1;
+    uint8_t times = 1;
 
     while (times <= b)
         times *= 10;
@@ -23,7 +24,7 @@ int combine(int a, int b)
 // read dht11 object
 bool dht11_read_obj(DHTobj* DHTdata)
 {
-    int dht11_val[5] = {0,0,0,0,0};
+    uint8_t dht11_val[5] = {0,0,0,0,0};
 
     if(!dht11_read(dht11_val))
         return false;
@@ -32,29 +33,25 @@ bool dht11_read_obj(DHTobj* DHTdata)
     float rh = (float)combine(dht11_val[0], dht11_val[1]);
 
     // initialize lastTemp / lastRH arrays
-    if(lastTemp[0] == 0.0)
+    for(uint8_t i = 0; i<MEAN_WINDOW; ++i)
     {
-        lastTemp[0] = temp;
-        lastRH[0] = rh;
+	if(lastTemp[i] == 0.0)
+        {
+          lastTemp[i] = temp;
+          lastRH[i] = rh;
+        }
     }
 
-    if(lastTemp[1] == 0.0)
+    for(uint8_t i = 0; i<MEAN_WINDOW; ++i)
     {
-        lastTemp[1] = temp;
-        lastRH[1] = rh;
+      temp += lastTemp[i];
+      rh += lastRH[i];
     }
-
-    if(lastTemp[2] == 0.0)
-    {
-        lastTemp[2] = temp;
-        lastRH[2] = rh;
-    }
-
-    temp = (temp + lastTemp[0] + lastTemp[1] + lastTemp[2]) * 0.25;
-    rh = (rh + lastRH[0] + lastRH[1] + lastRH[2]) * 0.25;
+    temp /= MEAN_WINDOW + 1;
+    rh /= MEAN_WINDOW + 1;
 
     // set index for lastTemp / lastRH arrays
-    if(index < 3)
+    if(index < MEAN_WINDOW)
       ++index;
     else
       index = 0;
@@ -70,7 +67,7 @@ bool dht11_read_obj(DHTobj* DHTdata)
 }
 
 // dht11 read function from http://www.rpiblog.com/2012/11/interfacing-temperature-and-humidity.html
-bool dht11_read(int* dht11_val)
+bool dht11_read(uint8_t* dht11_val)
 {
     uint8_t lstState = HIGH;
     uint8_t counter = 0;
