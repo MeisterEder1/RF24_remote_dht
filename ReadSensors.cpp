@@ -12,6 +12,9 @@ const char* MYSQLUSER = "root";
 const char* MYSQLPASSWD = "password";
 const char* MYSQLDB = "Monitoring";
 
+extern float lastTemp[MEAN_WINDOW];
+extern float lastRH[MEAN_WINDOW];
+
 void finish_with_error(MYSQL *con)
 {
     fprintf(stderr, "%s\n", mysql_error(con));
@@ -23,7 +26,11 @@ int main(int argc, char** argv)
 {
     if ( wiringPiSetup() == -1 )
         exit( 1 );
+
 //    piHiPri(55);
+
+    dht_clear_last(lastTemp);
+    dht_clear_last(lastRH);
 
     char SQLstring[64]; // string to send to SQL engine
 

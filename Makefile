@@ -30,3 +30,7 @@ ${PROGRAM}: ${OBJ}
 clean:
 	rm -rf ${PROGRAM}
 	rm -f *.o
+install:
+	/etc/init.d/ReadSensors stop
+	cp ${PROGRAM} /usr/bin
+	/etc/init.d/ReadSensors start

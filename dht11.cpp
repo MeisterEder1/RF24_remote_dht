@@ -5,10 +5,9 @@
 #include <stdbool.h>
 #include "dht11.h"
 
-float lastTemp[] = {0.0, 0.0, 0.0, 0.0, 0.0};
-float lastRH[] = {0.0, 0.0, 0.0, 0.0, 0.0};
+float lastTemp[MEAN_WINDOW];
+float lastRH[MEAN_WINDOW];
 uint8_t index = 0;
-const uint8_t MEAN_WINDOW = 5;
 
 // combine two binary values to one uint8_t
 uint8_t combine(uint8_t a, uint8_t b)
@@ -19,6 +18,13 @@ uint8_t combine(uint8_t a, uint8_t b)
         times *= 10;
 
     return a * times + b;
+}
+
+// clear "last" array
+void dht_clear_last(float* last)
+{
+    for(uint8_t i = 0; i<MEAN_WINDOW; ++i)
+        last[i] = 0.0;
 }
 
 // read dht11 object
