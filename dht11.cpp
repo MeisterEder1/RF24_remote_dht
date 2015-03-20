@@ -9,6 +9,14 @@ float lastTemp[MEAN_WINDOW];
 float lastRH[MEAN_WINDOW];
 uint8_t index = 0;
 
+// shift array to the left
+void shift_left(float *a)
+{
+   uint8_t i;
+   for (i = 0; i != MEAN_WINDOW; ++i)
+      *(a+i) = *(a+i+1);
+}
+
 // combine two binary values to one uint8_t
 uint8_t combine(uint8_t a, uint8_t b)
 {
@@ -53,14 +61,19 @@ bool dht11_read_obj(DHTobj* DHTdata)
       temp += lastTemp[i];
       rh += lastRH[i];
     }
+
     temp /= MEAN_WINDOW + 1;
     rh /= MEAN_WINDOW + 1;
 
     // set index for lastTemp / lastRH arrays
-    if(index < MEAN_WINDOW)
+    if(index < MEAN_WINDOW-1)
       ++index;
     else
-      index = 0;
+    {
+      index = MEAN_WINDOW-1;
+      shift_left(lastTemp);
+      shift_left(lastRH);
+    }
 
     // set values for lastTemp / lastRH arrays
     lastTemp[index] = temp;

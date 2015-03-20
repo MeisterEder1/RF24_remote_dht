@@ -3,7 +3,7 @@
 
 #define MAX_TIME 85
 #define DHT11PIN 8
-#define MEAN_WINDOW 8
+#define MEAN_WINDOW 12
 
 struct DHTobj
 {
