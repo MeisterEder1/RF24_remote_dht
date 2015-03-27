@@ -12,7 +12,8 @@ prefix := /usr/local
 #CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
 
 # The recommended compiler flags for the Raspberry Pi 2
-CCFLAGS=-Ofast -march=armv7-a -mtune=cortex-a7 -mfpu=neon -mfloat-abi=hard
+CCFLAGS=-Ofast -march=armv7-a -mfpu=neon -mfloat-abi=hard
+#-mtune=cortex-a7 -mfpu=neon -mfloat-abi=hard
 
 # define all programs
 CC=g++
